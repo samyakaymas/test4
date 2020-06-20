@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.urls import reverse
 
 class UserManager(BaseUserManager):
     use_in_migrations = True
@@ -54,6 +55,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['first_name', 'last_name']
-
+    def get_update_url(self):
+        return reverse('user-update',kwargs={'pk':self.pk})
     def __str__(self):
         return '{} '.format(self.first_name)

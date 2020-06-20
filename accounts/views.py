@@ -3,12 +3,13 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
-from .forms import SignUpForm, SignInForm
+from .forms import SignUpForm, SignInForm, PasswordForm
 from django.contrib.auth import get_user_model
+from django.views.generic import ListView,CreateView, UpdateView,DetailView
 
 def signin(request):
     if request.user.is_authenticated and get_user_model().objects.get(pk=request.user.id).is_superuser:
-        return redirect("/signup")
+        return redirect("/list")
     if request.user.is_authenticated:
         return redirect('theory/')
     if request.method == 'POST':
@@ -53,3 +54,25 @@ def signup(request):
 def signout(request):
     logout(request)
     return redirect('/')
+
+class UserListView(ListView):
+    queryset=get_user_model().objects.filter(is_superuser=False)
+    template_name='user_list.html'
+    model=User
+    def get(self,request, *args, **kwargs):
+        if not get_user_model().objects.get(pk=request.user.id).is_superuser:
+            return render(request,"theoryTag/401.html")
+        return super().get(request, *args, **kwargs)
+
+def ChangePassword(request,pk):
+    if not request.user.is_superuser:
+        return render(request,"theoryTag/401.html")
+    if request.method=="GET":
+        form = PasswordForm()
+        return render(request,'password_change.html',{'form':form})
+    form =PasswordForm(request.POST)
+    if form.is_valid():
+        user=get_user_model().objects.get(pk=pk)
+        user.set_password(form.cleaned_data.get('passwordField'))
+        user.save()
+        return redirect('/list')

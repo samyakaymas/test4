@@ -1,8 +1,8 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import get_user_model
-from django.forms import ModelForm
-
+from django.forms import ModelForm,Form
+from .models import User
 from django.apps import apps
 Chapter = apps.get_model('theoryTag', 'Chapter')
 Subject = apps.get_model('theoryTag', 'Subject')
@@ -21,4 +21,7 @@ class SignInForm(AuthenticationForm):
     class Meta:
         model = get_user_model()
         fields = ('username', 'password')
+
+class PasswordForm(Form):
+    name=forms.TextInput()
         

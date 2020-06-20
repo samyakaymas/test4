@@ -1,0 +1,55 @@
+{% extends "layout1.html" %}
+
+{%block title%}
+Super User
+{%endblock%}
+
+{% block content %}
+<h1>Welcome Superuser</h1>
+<h1>User List</h1>
+{% if user_list %}
+  <table class= "UserList">
+      <tr>
+          <th>Username</th>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Subject</th>
+          <th>Chapter</th>
+          <th>Password Change</th>
+      </tr>
+    {% for user in user_list %}
+        <tr>
+            <td>{{user.username}}</td>
+            <td>{{user.first_name}}</td>
+            <td>{{user.last_name}}</td>
+            <td>{{user.subject}}</td>
+            <td>{{user.chapter}}</td>
+            <td><a href="{{user.get_update_url}}">change password</a></td>
+        </tr>
+    {% endfor %}
+ </table>
+ <style>
+    table.UserList{
+      width: 50%;
+    }
+    .UserList caption{
+      caption-side: top;
+    }
+    table.UserList tr{
+      width:50%;
+      border: 1px solid black;
+    }
+    td.theorylistsubconcept {
+      border: 1px solid black;
+      width:75%;
+    }
+    td.theorylistlink {
+      text-align: center;
+      border: 1px solid black;
+      width:25%;
+    }
+    </style>
+{% else %}
+  <p>There are no User in the library.</p>
+{% endif %} 
+{% endblock %}
