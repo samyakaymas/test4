@@ -1,0 +1,163 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+Questin Tagging
+{% endblock %}
+
+{% block content %}
+<h1>Buffer Questions Tagging</h1>
+<h3>Maximum 3 Subconcepts can be selected</h3>
+<form method="post" id="QuesTagForm" >
+    {% csrf_token %}
+    {{ form.media }}
+    <table id="tagtable" width="100%">
+        {{ form.as_table }}
+        <tr style="height: 20px;"><td></td></tr>
+        <tr><th> </th> <td> <button type="submit">Submit</button> </td> </tr>
+        </table>
+</form>
+{% endblock %}
+
+{% block style %}
+<style>
+    table#tagtable{
+        width: 100%;
+    }
+    table#tagtable tbody{
+        width:100%;
+    }
+    .django-ckeditor-widget{
+        width: 100%;
+    }
+</style>
+{% endblock %}
+
+{% block script %}
+<script
+  src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+  crossorigin="anonymous"></script>
+<script>
+    $(document).ready(()=>{
+        var n= {{n}};
+        subConcept=[[]];
+        var i=1;
+        var e,tr2,th2,td2;
+        {% for i in ques %}
+            e=document.getElementById("id_error"+i).parentElement.parentElement;
+            tr2=document.createElement('tr');
+            th2=document.createElement('th');
+            td2=document.createElement('td');
+            th2.innerText=`Question ${i}:`;
+            td2.innerHTML=`{{i | safe}}`;
+            tr2.appendChild(th2);
+            tr2.appendChild(td2);
+            e.parentElement.insertBefore(tr2,e);
+            i+=1;
+        {%endfor%}
+        i=1
+        {% for i in ans %}
+            e=document.getElementById("id_error"+i).parentElement.parentElement;
+            tr2=document.createElement('tr');
+            th2=document.createElement('th');
+            td2=document.createElement('td');
+            th2.innerText=`Answer ${i}:`;
+            td2.innerHTML=`{{i | safe}}`;
+            tr2.appendChild(th2);
+            tr2.appendChild(td2);
+            e.parentElement.insertBefore(tr2,e);
+            i+=1;
+        {%endfor%}
+        console.log(n);
+        for(i=1;i<n+1;i++){
+            var id = 'id_subConcept'+i;
+            var id1 = 'id_concept'+i;
+            console.log(id);
+            var a=document.getElementById(id);
+            var button1=document.createElement('button');
+            button1.innerHTML=`reset`;
+            button1.type='button'
+            button1.setAttribute('id','id_re'+i)
+            a.parentElement.insertBefore(button1,a.nextSibling);
+            var button=document.createElement('button');
+            button.innerHTML=`add`;
+            button.type='button'
+            button.setAttribute('id','id_btn'+i)
+            a.parentElement.insertBefore(button,a.nextSibling);
+            
+            subConcept.push([])
+            subConcept[i]=$("#id_subConceptHidden"+i).val().split(',')
+            if(subConcept[i][0]=="")
+            {
+              subConcept[i] = [];
+            }
+            var name1=$("#id_conceptHidden"+i).val().split(',')
+            var selectnode=document.getElementById('id_concept'+i).parentElement.parentElement;
+            console.log(subConcept[i]);
+            for(const name2 in name1){
+                var tr = document.createElement("tr");
+                tr.className = "added"+i;
+                var th1 = document.createElement("th");
+                th1.innerText = ""
+                var td1 = document.createElement("td");
+                td1.innerText = name1[name2];
+                tr.appendChild(th1);
+                tr.appendChild(td1);
+                selectnode.parentNode.insertBefore(tr,selectnode);
+            }
+            console.log(subConcept[i])
+        }
+        
+        $('select[id^="id_concept"]').change(function(){
+            console.log('#id_'+'subC'+this.id.substring(4))
+            $('#id_'+'subC'+this.id.substring(4)).empty()
+            $.ajax({
+                url: "{% url 'ajaxLoadSubConcepts1' %}", 
+                data: {
+                    'concept':this.value
+                },
+                success: (data)=> {  
+                    console.log(data)
+                    $('#id_'+'subC'+this.id.substring(4)).html(data);
+                }
+            });
+        })
+        
+        $('button[id^="id_btn"]').click(function(){
+          if(subConcept[this.id.substring(6)].length>=3)
+          {
+            alert("Maximum 3 subconcepts can be added in Question "+this.id.substring(6));
+            return;
+          }
+          if(subConcept[this.id.substring(6)].includes($('#id_subConcept'+this.id.substring(6)).val())!=0)
+          {
+            alert("Already Added");
+            return;
+          }
+          subConcept[this.id.substring(6)].push($('#id_subConcept'+this.id.substring(6)).val())
+          var selectnode=document.getElementById('id_concept'+this.id.substring(6)).parentElement.parentElement;
+          var tr = document.createElement("tr");
+          tr.className = "added"+this.id.substring(6);
+          var th1 = document.createElement("th");
+          th1.innerText = " ";
+          var td1 = document.createElement("td");
+          td1.innerText = $('#id_subConcept'+this.id.substring(6)+' option:selected').text();
+          tr.appendChild(th1);
+          tr.appendChild(td1);
+          selectnode.parentNode.insertBefore(tr,selectnode);
+        })
+        $('button[id^="id_re"]').click(function(){
+            var qn=this.id.substring(5);
+            $(".added"+qn).remove();
+            subConcept[qn]=[]
+        })
+        $("#QuesTagForm").submit((event)=>{
+            console.log("write back")
+            for(i=1;i<n+1;i++)
+                $("#id_subConceptHidden"+i).val(subConcept[i].toString())
+            return event.preventDefault;
+        });
+    });
+</script>
+
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends 'layout.html' %}
+{%block title%}
+Cross Concept Preview
+{%endblock%}
+{% block content %}
+<h1>Cross Concept Questions</h1>
+{% for q in cross %}
+<table>
+
+<tr><td> <strong>Question {{ q.question_no }}</strong>{{ q.question | safe }} </td></tr>
+<tr><td> <strong>Correct Answer: </strong> {{ q.answer }} </td></tr>
+{% for subconcept in q.subconcepts.all %}
+<tr><td>{{ subconcept.concept.name }} : {{ subconcept.name }}</td></tr>
+{% endfor %}
+<tr><td>----------------------------------------------<br></td></tr>
+</table>
+{% endfor %}
+{% endblock %}

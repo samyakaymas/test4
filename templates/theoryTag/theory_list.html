@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+{%block title%}
+Theories
+{%endblock%}
+{% block content %}
+  <h1>Theory List</h1>
+    {% for concept in chapter.concepts.all%}
+      <table class="theorylist">
+        <caption> <strong>{{concept.name}}</strong> </caption>
+      {%for subConcept in concept.subConcepts.all%}
+      <tr>
+        <td class="theorylistsubconcept">{{subConcept.name}} </td>
+        <td class="theorylistlink">{% if subConcept.isTheory %}
+            <a href="{{ subConcept.get_theory_update_url }}">edit</a> <a href="{{ subConcept.get_theory_view_url}}">show</a>
+          {%else%}
+            <a href="{{subConcept.get_theory_add_url}}">add</a></td>
+        {%endif%}
+      {% endfor %}
+      </tr>
+      </table>
+      <br><br>
+    {% endfor %}
+{% endblock %}
+
+{% block style %}
+<style>
+table.theorylist{
+  width: 50%;
+}
+.theorylist caption{
+  caption-side: top;
+}
+table.theorylist tr{
+  width:50%;
+  border: 1px solid black;
+}
+td.theorylistsubconcept {
+  border: 1px solid black;
+  width:75%;
+}
+td.theorylistlink {
+  text-align: center;
+  border: 1px solid black;
+  width:25%;
+}
+</style>
+
+{% endblock %}

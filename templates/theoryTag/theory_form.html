@@ -1,0 +1,315 @@
+{% extends 'layout.html' %}
+{%block title%}
+Theory
+{%endblock%}
+
+{% block content %}.
+<button id="doc_tog" style="position: fixed; right:0%;top:10%">Toggle Rough Editor</button>
+<div id="doc_pos" style="position:fixed; right:0%; display:none;z-index: 98; width: 50%;top:21%">
+    <textarea name="editor1" id="editor1">
+    </textarea>
+</div>
+<div id="top" style="position:fixed;top:6.5%;left:7%;align-items: center;z-index: 99;"></div>
+<h1 style="margin-top:20%">Theory Form</h1>
+<form method="post" id="theoryTagForm">
+    {% csrf_token %}
+    {{ form.media }}
+    <table id="theorytable">
+      {{ form.as_table }}
+
+      <tr style="height: 20px;"><td></td></tr>
+      <tr><th> </th> <td> <button type="submit">Save</button> </td> </tr>
+    </table>
+    </form>
+    <br>
+    <br>
+    <br>
+
+{% endblock %}
+{% block style %}
+<style>
+table#theorytable tr th{
+    width:120px;
+    vertical-align: center;
+    text-align: center;
+}
+table#theorytable {
+    width: 100%;
+}
+.django-ckeditor-widget{
+    width: 50%;
+}
+#id_difficulty{
+    list-style-type: none;
+}
+#id_importance{
+    list-style-type: none;
+}
+
+form ul.radiolist label {
+    float: none;
+    display: inline;
+}
+
+form ul.radiolist input[type="radio"] {
+    margin: -2px 4px 0 0;
+    padding: 0;
+}
+
+form ul.inline {
+    margin-left: 0;
+    padd    ing: 0;
+}
+
+form ul.inline li {
+    float: left;
+    padding-right: 7px;
+}
+</style>
+{% endblock %}
+{% block script %}
+  <script
+  src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+  crossorigin="anonymous"></script>
+<script>
+    // function asyncAlert(m){
+    //     setTimeout(function(){
+    //         alert(m);
+    //     },1);
+    // };
+    $(document).ready(function() {
+        
+        
+        //asyncAlert(`Equations and reactions can be either directly copy pasted from Google Doc or can be created in the text box itself`)
+        alert(`The Tool Box is common for each text box.\n Equations and reactions can be either directly copy pasted from Google Doc or can be created in the text box itself`)
+        
+        console.log(1)
+        console.log("start")
+        if($('[name="concept"]').val()===""){
+            $('[name="concept"]').empty()
+        $.ajax({
+            url: "{% url 'ajaxLoadConcepts' %}", 
+            data: {
+            },
+            success: (data)=> {  
+                $('[name="concept"]').html(data);
+            }
+        });
+        }
+        
+        var Obj = document.getElementsByName('prerequisites')[0]; //any element to be fully replaced
+        var str = `<div name="prerequisiteContainer"><ul name="prerequisiteList"></ul><select name="prerequisitesChapter" ><option value="">---------</option><option value="1">Trigonometric Ratios, Functions, and Identities</option><option value="2">Trigonometric Equations</option><option value="3">Properties of triangle</option><option value="4">Inverse Trigonometric Functions</option><option value="5">Quadratic Equations</option><option value="6">Sequences and Series (Progressions)</option><option value="7">Binomial Theorem</option><option value="8">Permutation and Combination</option><option value="9">Complex Numbers</option><option value="10">Matrices and Determinants</option><option value="11">Probability</option><option value="12">Set Theory and Relations</option><option value="13">Mathematical Induction</option><option value="14">Functions</option><option value="15">Application of Derivatives</option><option value="16">Differential Coefficient </option><option value="17">Continuity and Differentiability</option><option value="18">Limits</option><option value="19">Indefinite Integration</option><option value="20">Definite Integration</option><option value="21">Differential Equation:</option><option value="22">Area Under Curves:</option><option value="23">Point and Straight Line</option><option value="24">Circle</option><option value="25">Vector</option><option value="26">Three Dimensional Geometrical System</option><option value="27">Ellipse</option><option value="28">Parabola</option><option value="29">Hyperbola</option><option value="30">Statistics</option><option value="31">Mathematical Reasoning</option></select><select name="prerequisitesConcept"></select><select name="prerequisitesSubConcept"></select><button name="sbt-prerequisite">Add</button></div>`;
+        var prerequisiteObj=($('[name="prerequisites"]').val())
+        var tmpObj = document.createElement("div");
+        tmpObj.name='prerequisites'
+
+        tmpObj.innerHTML = '<!--THIS DATA SHOULD BE REPLACED-->';
+        ObjParent = Obj.parentNode; //Okey, element should be parented
+        ObjParent.replaceChild(tmpObj, Obj); //here we placing our temporary data instead of our target, so we can find it then and replace it into whatever we want to replace to
+        ObjParent.innerHTML = ObjParent.innerHTML.replace('<div><!--THIS DATA SHOULD BE REPLACED--></div>', str);
+        var twinConceptObj=($('[name="twinConcepts"]').val())
+        Obj=document.getElementsByName('twinConcepts')[0]
+        str=`<div name="twinConceptsContainer"><ul name="twinConceptsList"></ul><select name="twinConceptsChapter" ><option value="">---------</option><option value="1">Trigonometric Ratios, Functions, and Identities</option><option value="2">Trigonometric Equations</option><option value="3">Properties of triangle</option><option value="4">Inverse Trigonometric Functions</option><option value="5">Quadratic Equations</option><option value="6">Sequences and Series (Progressions)</option><option value="7">Binomial Theorem</option><option value="8">Permutation and Combination</option><option value="9">Complex Numbers</option><option value="10">Matrices and Determinants</option><option value="11">Probability</option><option value="12">Set Theory and Relations</option><option value="13">Mathematical Induction</option><option value="14">Functions</option><option value="15">Application of Derivatives</option><option value="16">Differential Coefficient </option><option value="17">Continuity and Differentiability</option><option value="18">Limits</option><option value="19">Indefinite Integration</option><option value="20">Definite Integration</option><option value="21">Differential Equation:</option><option value="22">Area Under Curves:</option><option value="23">Point and Straight Line</option><option value="24">Circle</option><option value="25">Vector</option><option value="26">Three Dimensional Geometrical System</option><option value="27">Ellipse</option><option value="28">Parabola</option><option value="29">Hyperbola</option><option value="30">Statistics</option><option value="31">Mathematical Reasoning</option></select><select name="twinConceptsConcept"></select><select name="twinConceptsSubConcept"></select><button name="sbt-twinConcept">Add</button></div>`;
+        tmpObj = document.createElement("div");
+        tmpObj.name='twinConcepts'
+
+        tmpObj.innerHTML = '<!--THIS DATA SHOULD BE REPLACED-->';
+        ObjParent = Obj.parentNode; //Okey, element should be parented
+        ObjParent.replaceChild(tmpObj, Obj); //here we placing our temporary data instead of our target, so we can find it then and replace it into whatever we want to replace to
+        ObjParent.innerHTML = ObjParent.innerHTML.replace('<div><!--THIS DATA SHOULD BE REPLACED--></div>', str);
+
+        $('[name="prerequisitesChapter"]').change(()=>{
+            console.log($('[name="prerequisitesChapter"]').val())
+            console.log($())
+            $('[name="prerequisitesConcept"]').empty();
+            $.ajax({
+                url: "{% url 'ajaxLoadConcepts' %}", 
+                data: {
+                    'chapter' : $('[name="prerequisitesChapter"]').val()
+                },
+                success: (data)=> {  
+                    $('[name="prerequisitesConcept"]').html(data);
+                }
+            });
+        })
+         $('[name="prerequisitesConcept"]').change(()=>{
+            $('[name="prerequisitesSubConcept"]').empty()
+            $.ajax({
+                url: "{% url 'ajaxLoadSubConcepts' %}", 
+                data: {
+                    'concept': $('[name="prerequisitesConcept"]').val()
+                },
+                success: (data)=> {  
+                    console.log(data)
+                    $('[name="prerequisitesSubConcept"]').html(data);
+                }
+            });
+        })
+        prevPrerequisitesName=[]
+        var ul = document.getElementsByName("prerequisiteList")[0];
+        for(i=0;i<prerequisiteObj.length;i++){
+               $.ajax({
+                    url: "{% url 'subConcept-Name' %}",
+                    data: {
+                        'subConcept' : prerequisiteObj[i]
+                    },
+
+                    async: false,
+                    success: (data)=>{
+                        prevPrerequisitesName.push(data.subConceptName);
+                    }
+                })
+        }
+        prevPrerequisitesName.forEach(element => {
+            var li = document.createElement("li");
+            li.appendChild(document.createTextNode(element));
+            
+            ul.appendChild(li);
+        });
+        $('[name="sbt-prerequisite"]').click(()=>{
+            if(prerequisiteObj.includes($('[name="prerequisitesSubConcept"]').val())==0){
+                if($('[name="prerequisitesSubConcept"]').val()==-1){
+                    console.log("helloefeef")
+                    var x = document.getElementsByName("prerequisitesSubConcept")[0];
+                    for (i = 2; i < x.options.length; i++) {
+                        if(prerequisiteObj.includes(x.options[i].value)!=0)
+                            break;
+                        prerequisiteObj.push(x.options[i].value);
+                        var li = document.createElement("li");
+                        li.appendChild(document.createTextNode(x.options[i].text));
+                        ul.appendChild(li);
+                    }
+                }
+                else{
+                    prerequisiteObj.push( $('[name="prerequisitesSubConcept"]').val());
+                    var li = document.createElement("li");
+                    li.appendChild(document.createTextNode($( '[name="prerequisitesSubConcept"] option:selected' ).text()));
+                    ul.appendChild(li);
+                }
+            }
+            return false;
+        })
+
+
+        $('[name="twinConceptsChapter"]').change(()=>{
+        console.log("Fafafa")
+        $('[name="twinConceptsConcept"]').empty();
+        $.ajax({
+            url: "{% url 'ajaxLoadConcepts' %}", 
+            data: {
+                'chapter' : $('[name="twinConceptsChapter"]').val()
+            },
+            success: (data)=> {  
+                $('[name="twinConceptsConcept"]').html(data);
+            }
+        });
+        })
+        $('[name="twinConceptsConcept"]').change(()=>{
+
+            $('[name="twinConceptsSubConcept"]').empty()
+                $.ajax({
+                    url: "{% url 'ajaxLoadSubConcepts' %}", 
+                    data: {
+                        'concept': $('[name="twinConceptsConcept"]').val()
+                    },
+                    success: (data)=> {  
+                        console.log(data)
+                        $('[name="twinConceptsSubConcept"]').html(data);
+                    }
+                });
+        })
+        prevTwinConceptName=[]
+        var ul1 = document.getElementsByName("twinConceptsList")[0];
+        for(i=0;i<twinConceptObj.length;i++){
+               $.ajax({
+                    url: "{% url 'subConcept-Name' %}",
+                    data: {
+                        'subConcept' :twinConceptObj[i]
+                    },
+
+                    async: false,
+                    success: (data)=>{
+                        prevTwinConceptName.push(data.subConceptName);
+                    }
+                })
+        }
+        prevTwinConceptName.forEach(element => {
+            var li = document.createElement("li");
+            li.appendChild(document.createTextNode(element));
+            
+            ul1.appendChild(li);
+        });
+        
+        $('[name="sbt-twinConcept"]').click(()=>{
+            if(twinConceptObj.includes($('[name="twinConceptsSubConcept"]').val())==0){
+                if($('[name="twinConceptsSubConcept"]').val()==-1){
+                    console.log("helloefeef")
+                    var x = document.getElementsByName("twinConceptsSubConcept")[0];
+                    for (i = 2; i < x.options.length; i++) {
+                        if(twinConceptObj.includes(x.options[i].value)!=0)
+                            break;
+                        twinConceptObj.push(x.options[i].value);
+                        var li = document.createElement("li");
+                        li.appendChild(document.createTextNode(x.options[i].text));
+                        ul1.appendChild(li);
+                    }
+                }
+                else{
+                    twinConceptObj.push( $('[name="twinConceptsSubConcept"]').val());
+                    var li = document.createElement("li");
+                    li.appendChild(document.createTextNode($( '[name="twinConceptsSubConcept"] option:selected' ).text()));
+                    ul1.appendChild(li);
+                }
+            }
+            return false;
+        })
+        
+        $('[name="concept"]').change(()=>{
+            $('[name="subConcept"]').empty()
+            $.ajax({
+                url: "{% url 'ajaxLoadSubConcepts' %}", 
+                data: {
+                    'concept': $('[name="concept"]').val()
+                },
+                success: (data)=> {  
+                    console.log(data)
+                    $('[name="subConcept"]').html(data);
+                }
+            });
+        })
+        $("#theoryTagForm").submit((event)=>{
+            console.log("write back")
+            $("#id_prerequisiteHiddenField").val(prerequisiteObj.toString()) 
+            $("#id_twinConceptprerequisiteHiddenField").val(twinConceptObj.toString())
+            console.log(prerequisiteObj)
+            return event.preventDefault;
+        });
+
+        $('#doc_tog').click(()=>{
+            var x = document.getElementById('doc_pos').style.display;
+            if(x=="none")
+            {
+                document.getElementById('doc_pos').style.display="";
+            }
+            else{
+                document.getElementById('doc_pos').style.display="none";
+            };
+            
+        });
+        CKEDITOR.replace('editor1',{
+            removeButtons: 'Language,PasteFromWord,PasteText,Source,Save,Preview,Print,Templates,Cut,Copy,Paste,SelectAll,Scayt,Form,Checkbox,Radio,TextField,Textarea,Select,Button,ImageButton,HiddenField,Flash,About',
+            extraPlugins: 'ckeditor_wiris,chart,image2,sharedspace,autosave',
+            removePlugins: 'maximize,image,elementspath,resize',
+            sharedSpaces: {
+            top: 'top',
+            }
+        });
+        
+    });
+        
+
+</script>
+
+
+{% endblock %}

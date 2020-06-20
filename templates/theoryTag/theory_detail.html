@@ -1,0 +1,92 @@
+{% extends "layout.html" %}
+{%block title%}
+Theory Preview
+{%endblock%}
+{% block content %}
+  
+  <h1>Concept: {{ theory.subConcept.concept.name }}</h1>
+    <h1>subConcept: {{theory.subConcept.name}}</h1>
+  <p><strong>theory:</strong> {{ theory.theory | safe }}</p> 
+  <p><strong>easyExampleQues1:</strong> {{ theory.easyExampleQues1 | safe }}</p> 
+  <p><strong>easyExampleSol1:</strong> {{ theory.easyExampleSol1 | safe }}</p>
+  <p><strong>easyExampleQues2:</strong> {{ theory.easyExampleQues2 | safe }}</p> 
+  <p><strong>easyExampleSol2:</strong> {{ theory.easyExampleSol2 | safe }}</p>
+  <p><strong>easyExampleQues3:</strong> {{ theory.easyExampleQues3 | safe }}</p> 
+  <p><strong>easyExampleSol3:</strong> {{ theory.easyExampleSol3 | safe }}</p>
+  <p><strong>easyExampleQues4:</strong> {{ theory.easyExampleQues4 | safe }}</p> 
+  <p><strong>easyExampleSol4:</strong> {{ theory.easyExampleSol4 | safe }}</p>
+  <p><strong>easyExampleQues5:</strong> {{ theory.easyExampleQues5 | safe }}</p> 
+  <p><strong>easyExampleSol5:</strong> {{ theory.easyExampleSol5 | safe }}</p>
+  <p><strong>easyExampleQues6:</strong> {{ theory.easyExampleQues6 | safe }}</p> 
+  <p><strong>easyExampleSol6:</strong> {{ theory.easyExampleSol6 | safe }}</p>
+  <p><strong>easyExampleQues7:</strong> {{ theory.easyExampleQues7 | safe }}</p> 
+  <p><strong>easyExampleSol7:</strong> {{ theory.easyExampleSol7 | safe }}</p>
+  <p><strong>mediumExampleQues1:</strong> {{ theory.mediumExampleQues1 | safe }}</p> 
+  <p><strong>mediumExampleSol1:</strong> {{ theory.mediumExampleSol1 | safe }}</p>
+  <p><strong>mediumExampleQues2:</strong> {{ theory.mediumExampleQues2 | safe }}</p> 
+  <p><strong>mediumExampleSol2:</strong> {{ theory.mediumExampleSol2 | safe }}</p>
+  <p><strong>mediumExampleQues3:</strong> {{ theory.mediumExampleQues3 | safe }}</p> 
+  <p><strong>mediumExampleSol3:</strong> {{ theory.mediumExampleSol3 | safe }}</p>
+  <p><strong>mediumExampleQues4:</strong> {{ theory.mediumExampleQues4 | safe }}</p> 
+  <p><strong>mediumExampleSol4:</strong> {{ theory.mediumExampleSol4 | safe }}</p>
+  <p><strong>mediumExampleQues5:</strong> {{ theory.mediumExampleQues5 | safe }}</p> 
+  <p><strong>mediumExampleSol5:</strong> {{ theory.mediumExampleSol5 | safe }}</p>
+  <p><strong>mediumExampleQues6:</strong> {{ theory.mediumExampleQues6 | safe }}</p> 
+  <p><strong>mediumExampleSol6:</strong> {{ theory.mediumExampleSol6 | safe }}</p>
+  <p><strong>mediumExampleQues7:</strong> {{ theory.mediumExampleQues7 | safe }}</p> 
+  <p><strong>mediumExampleSol7:</strong> {{ theory.mediumExampleSol7 | safe }}</p>
+  <p><strong>hardExampleQues1:</strong> {{ theory.hardExampleQues1 | safe }}</p> 
+  <p><strong>hardExampleSol1:</strong> {{ theory.hardExampleSol1 | safe }}</p>
+  <p><strong>hardExampleQues2:</strong> {{ theory.hardExampleQues2 | safe }}</p> 
+  <p><strong>hardExampleSol2:</strong> {{ theory.hardExampleSol2 | safe }}</p>
+  <p><strong>hardExampleQues3:</strong> {{ theory.hardExampleQues3 | safe }}</p> 
+  <p><strong>hardExampleSol3:</strong> {{ theory.hardExampleSol3 | safe }}</p>
+  <p><strong>hardExampleQues4:</strong> {{ theory.hardExampleQues4 | safe }}</p> 
+  <p><strong>hardExampleSol4:</strong> {{ theory.hardExampleSol4 | safe }}</p>
+  <p><strong>hardExampleQues5:</strong> {{ theory.hardExampleQues5 | safe }}</p> 
+  <p><strong>hardExampleSol5:</strong> {{ theory.hardExampleSol5 | safe }}</p>
+  <p><strong>hardExampleQues6:</strong> {{ theory.hardExampleQues6 | safe }}</p> 
+  <p><strong>hardExampleSol6:</strong> {{ theory.hardExampleSol6 | safe }}</p>
+  <p><strong>easyIntegerTypeQues1</strong>{{ theory.easyIntegerTypeQues1 | safe}}</p>
+  <p><strong>easyIntegerTypeSol1</strong>{{ theory.easyIntegerTypeSol1 | safe}}</p>
+  <p><strong>easyIntegerTypeQues2</strong>{{ theory.easyIntegerTypeQues2 | safe}}</p>
+  <p><strong>easyIntegerTypeSol2</strong>{{ theory.easyIntegerTypeSol2 | safe}}</p>
+  
+  <p><strong>mediumIntegerTypeQues1</strong>{{ theory.mediumIntegerTypeQues1 | safe}}</p>
+  <p><strong>mediumIntegerTypeSol1</strong>{{ theory.mediumIntegerTypeSol1 | safe}}</p>
+  <p><strong>mediumIntegerTypeQues2</strong>{{ theory.mediumIntegerTypeQues2 | safe}}</p>
+  <p><strong>mediumIntegerTypeSol2</strong>{{ theory.mediumIntegerTypeSol2 | safe}}</p>
+  
+  <p><strong>hardIntegerTypeQues1</strong>{{ theory.hardIntegerTypeQues1 | safe}}</p>
+  <p><strong>hardIntegerTypeSol1</strong>{{ theory.hardIntegerTypeSol1 | safe}}</p>
+  
+
+
+  <p><strong>Difficulty:</strong> {{ theory.difficulty }}</p>
+  <p><strong>Importance:</strong> {{ theory.importance }}</p> 
+  <p><strong>Duration:</strong> {{ theory.duration }} mins</p>
+  <p><strong>Prerequisites:
+    <ul>
+      {% for subConcept in theory.prerequisites.all %}
+      <li>{{subConcept.name}}</li>
+      {% endfor %}
+    </ul>
+  </strong></p>  
+  <p><strong>Summary</strong>    {{theory.summary | safe}} </p> 
+  <p><strong>Mnemonics</strong>    {{theory.mnemonics | safe}} </p> 
+  <p><strong>TwinConcepts:
+    <ul>
+      {% for twinConcept in theory.twinConcepts.all %}
+      <li>{{twinConcept.name}}</li>
+      {% endfor %}
+    </ul>
+  </strong></p>
+  <p><strong>videoUrl:</strong> {{ theory.videoUrl | safe }}</p>
+  <p><strong>targetExam:</strong> {{ theory.targetExam | safe }}</p>
+  <p><strong>wowTheory:</strong> {{ theory.wowTheory | safe }}</p>
+  <p><strong>wowQues:</strong> {{ theory.wowQues | safe }}</p>
+  <p><strong>wowReason:</strong> {{ theory.wowReason | safe }}</p>
+
+
+ 
+{% endblock %}

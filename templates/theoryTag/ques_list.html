@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+{%block title%}
+
+{%endblock%}
+{% block content %}
+  <h1>Ques List</h1>
+  {% if ques_list %}
+  <ul>
+    {% for ques in ques_list %}
+      <li>
+        <a href="{{ ques.get_update_url }}">Tag Question</a> (Tagged:{{ques.rated}})
+      </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+    <p>There are no questions in the library.</p>
+  {% endif %}
+
+  <p><strong><a href="/theory">Home</a></strong></p>
+  <a href="/signout"> Logout </a>    
+{% endblock %}

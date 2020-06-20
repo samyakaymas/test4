@@ -1,0 +1,20 @@
+{% extends 'layout.html' %}
+{%block title%}
+Question Tag Preview
+{%endblock%}
+{% block content %}
+<h1>Buffer Questions Preview</h1>
+{% for q in ques %}
+<table>
+
+<tr><td> <strong>Question</strong> {{ q.ques | safe }} </td></tr>
+<tr><td> <strong>Correct Answer: </strong> {{ q.ans | safe }} </td></tr>
+{% for subconcept in q.subConcept.all %}
+<tr><td>{{ subconcept.concept.name }} : {{ subconcept.name }}</td></tr>
+{% endfor %}
+<tr><td><strong>Difficulty:    </strong>{{ q.difficulty }} / 5</td></tr>
+<tr><td><strong>Error:    </strong>{{ q.error }}</td></tr>
+<tr><td>----------------------------------------------<br></td></tr>
+</table>
+{% endfor %}
+{% endblock %}

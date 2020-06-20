@@ -1,0 +1,221 @@
+{% extends 'layout.html' %}
+{%block title%}
+Cross Concept Questions
+{%endblock%}
+{% block content %}
+<h1>Cross Concept Questions for the Chapter</h1>
+<h3>There are {{ form.n1 }} MCQs and {{ form.n2 }} Integer type questions.</h3>
+<h3>Minimum 3 Subconcepts are necessary for each question.</h3>
+<form method="post" id="CrossConceptForm">
+    {% csrf_token %}
+    {{ form.media }}
+    <table id="crosstable" width="100%">
+      {{ form.as_table }}
+   
+    <tr style="height: 20px;"><td></td></tr>
+    <tr><th> </th> <td> <button type="submit">Save</button> </td> </tr>
+    </table>
+  </form>
+  <br>
+  <br>
+  <br>
+{% endblock %}
+{% block style %}
+<style>
+    table#crosstable{
+        width: 100%;
+    }
+    table#crosstable tbody{
+        width:100%;
+    }
+    .django-ckeditor-widget{
+        width: 100%;
+    }
+</style>
+{% endblock %}
+{% block script %}
+<script>
+  $(document).ready(function()
+  {
+    console.log("hello1")
+    $(".django-ckeditor-widget").css("width", "100%");
+    var n = {{ form.n1 }} + {{ form.n2 }};
+    var n2={{form.n1}}+1;
+    concepthtml = `
+    <option value="">------</option>
+    {% for concept in concepts %}
+    <option value="{{ concept.id }}">{{ concept.name }}</option>
+    {% endfor %}
+    `
+    subconcepthtml = `
+    <option value="">------</option>
+    {% for subconcept in subconcepts %}
+    <option value="{{ subconcept.id }}">{{ subconcept.name }}</option>
+    {% endfor %}
+    `
+    for(i=1;i<n+1;i++)
+    {
+      var tr = document.getElementById("id_a"+i).parentElement.parentElement;
+      var tr1 = document.createElement("tr");
+      tr1.id = "tr"+i;
+      var th1 = document.createElement("th");
+      var label1 = document.createElement("label");
+      label1.setAttribute("for","id_c"+i);
+      label1.innerText = "Concept"+":";
+      th1.appendChild(label1);
+      var td1 = document.createElement("td");
+      tempconcept = document.createElement("select");
+      tempconcept.name = "concept_select"+i;
+      tempconcept.id = "id_concept_select"+i;
+      tempconcept.innerHTML = concepthtml;
+      td1.appendChild(tempconcept);
+      td1.setAttribute("data-field-id","id_c"+i);
+
+      tempsubconcept = document.createElement("select");
+      tempsubconcept.name = "subconcept_select"+i;
+      tempsubconcept.id = "id_subconcept_select"+i;
+      tempsubconcept.innerHTML = subconcepthtml;
+      td1.appendChild(tempsubconcept);
+
+      var buttn = document.createElement("button");
+      buttn.id = "select"+i;
+      buttn.innerText = "Add";
+      buttn.type = "button";
+      td1.appendChild(buttn);
+
+      var buttn = document.createElement("button");
+      buttn.id = "delete"+i;
+      buttn.innerText = "Reset";
+      buttn.type = "button";
+      td1.appendChild(buttn);
+
+      tr1.appendChild(th1);
+      tr1.appendChild(td1);
+      tr.parentNode.insertBefore(tr1,tr.nextSibling);
+    }
+    console.log(n2)
+    var e=document.getElementById('id_q'+n2).parentElement.parentElement.parentElement
+    var tr2=document.createElement('tr')
+    var th2=document.createElement('th')
+    var td2=document.createElement('td')
+    th2.innerText=""
+    tr2.appendChild(th2)
+    td2.innerHTML=`<br><br><h2>Integer Type Questions</h2>`
+    tr2.appendChild(td2)
+    e.parentElement.insertBefore(tr2,e);
+
+    
+
+    {% for obj in quests   %}
+
+      qn = {{ obj.question_no }};
+      var tr = document.getElementById("tr"+qn);
+      {% for sub in obj.subconcepts.all %}
+        var tr1 = document.createElement("tr");
+        tr1.className = "added"+qn;
+        var th1 = document.createElement("th");
+        th1.innerText = " ";
+        var td1 = document.createElement("td");
+        td1.innerText = "{{ sub.concept.name }}" + " : " + "{{ sub.name }}";
+        tr1.appendChild(th1);
+        tr1.appendChild(td1);
+        tr.parentNode.insertBefore(tr1,tr);
+      {% endfor %}
+    {% endfor %}
+
+    $('select[id^="id_concept_select"]').change(function(){
+      var conceptid = this.value;
+      var qn = this.id.substring(17);
+      var subconceptselect = document.getElementById("id_subconcept_select"+qn);
+      newsubconcepthtml = ""
+        {% for subconcept in subconcepts %}
+
+        if(conceptid=="{{ subconcept.concept.id }}")
+        {
+        newsubconcepthtml= newsubconcepthtml.concat('<option value="{{ subconcept.id }}">{{ subconcept.name }}</option>',"\n");
+        }
+        {% endfor %}
+      
+      subconceptselect.innerHTML = newsubconcepthtml;
+    });
+
+    $('button[id^="select"]').click(function(){
+      var qn = this.id.substring(6);
+      concept_id = document.getElementById("id_concept_select"+qn).value;
+      subconcept_id = document.getElementById("id_subconcept_select"+qn).value;
+      if(concept_id == "")
+      {
+        alert("No Concept selected");
+        return;
+      }
+      if(subconcept_id == "")
+      {
+        alert("No Subconcept selected");
+        return;
+      }
+      concept_name = '';
+      subconcept_name = '';
+      var children = document.getElementById("id_concept_select"+qn).children;
+      for(var i = 0; i<children.length;i++)
+      {
+        if(children[i].value==concept_id)
+        {
+          concept_name = children[i].innerText;
+        }
+      }
+      var children = document.getElementById("id_subconcept_select"+qn).children;
+      for(var i = 0; i<children.length;i++)
+      {
+        if(children[i].value==subconcept_id)
+        {
+          subconcept_name = children[i].innerText;
+        }
+      }
+      var selectnode = document.getElementById("tr"+qn);
+      var tr = document.createElement("tr");
+      tr.className = "added"+qn;
+      var th1 = document.createElement("th");
+      th1.innerText = " ";
+      var td1 = document.createElement("td");
+      td1.innerText = concept_name + " : " + subconcept_name;
+
+      var already = $(".added"+qn);
+      for(var i=0;i<already.length;i++)
+      {
+       if(already[i].childNodes[1].innerText==td1.innerText)
+       {
+         alert("Already Added");
+         return;
+       }
+      }
+
+      tr.appendChild(th1);
+      tr.appendChild(td1);
+      selectnode.parentNode.insertBefore(tr,selectnode);
+      var subconceptfield = document.getElementById("id_subconcept"+qn);
+      subconceptfield.value = subconceptfield.value + subconcept_id + ",";
+
+    });
+
+    $('button[id^="delete"]').click(function(){
+      var qn = this.id.substring(6);
+      $(".added"+qn).remove();
+      document.getElementById("id_subconcept"+qn).value = "";
+    });
+    
+    $('button[type="submit"]').click(function(){
+      for(var i=1;i<=n;i++)
+      {
+        var x = ".added"+i;
+        if($(x).length < 3)
+        {
+          alert("Minimum 3 Subconcepts are required in question "+i);
+          return false;
+        }
+      }
+      return true;
+    })
+  });
+  
+</script>
+{% endblock %}

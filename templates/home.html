@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+{%block title%}
+Home
+{%endblock%}
+{% block content %}
+  <h1>Home</h1>
+  <h3>Welcome <strong>{{ request.user.first_name }} {{ request.user.last_name }}</strong></h3>
+  <h3>Subject: {{ request.user.subject }}</h3>
+  <h3>Chapter: {{ request.user.chapter }}</h3>
+{% endblock %}

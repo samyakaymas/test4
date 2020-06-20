@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+  <h1>Mains Paper List</h1>
+  {% if paper_list %}
+  <ul>
+    {% for paper in paper_list %}
+      <li>
+        <a href="{{ paper.get_update_url }}">edit</a> 
+
+      </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+    <p>There are no Paper in the library.</p>
+  {% endif %}
+  
+  <p><strong>    <a href="addPaper">Add Paper</a></strong></p>
+  <p><strong><a href="/theory">Home</a></strong></p>
+  <a href="/signout"> Logout </a>    
+{% endblock %}

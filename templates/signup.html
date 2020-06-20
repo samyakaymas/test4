@@ -1,0 +1,55 @@
+{% extends "layout1.html" %}
+
+{%block title%}
+Super User
+{%endblock%}
+
+{% block content %}
+<h1>Welcome Superuser</h1>
+  <h1>{{message}}</h1>
+  <h2>Create User</h2>
+  <form method="post">
+    {% csrf_token %}
+    {% for field in form %}
+      <p>
+        {{ field.label_tag }}<br>
+        {{ field }}
+        {% if field.help_text %}
+          <small style="color: grey">{{ field.help_text }}</small>
+        {% endif %}
+        {% for error in field.errors %}
+          <p style="color: red">{{ error }}</p>
+        {% endfor %}
+      </p>
+    {% endfor %}
+    <button type="submit">Create</button>
+  </form>
+  <br><a href="/signout">Logout</a>
+  <script
+  src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+  crossorigin="anonymous"></script>
+<script>
+  $(document).ready(()=>{
+    var flag= {{isCreated}};
+    var message="";
+    message=`{{message}}`;
+    if(flag == 1)
+      alert(message);
+    $('#id_subject').val("");
+    $('#id_chapter').empty();
+    $('#id_subject').change(()=>{
+            $('#id_chapter').empty()
+            $.ajax({
+                url: "{% url 'ajaxLoadChapters' %}", 
+                data: {
+                    'subject' : $('#id_subject').val()
+                },
+                success: (data)=> {  
+                    $('#id_chapter').html(data);
+                }
+            });
+        })
+  })
+</script>
+{% endblock %}
