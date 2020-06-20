@@ -29,6 +29,12 @@ Questin Tagging
     .django-ckeditor-widget{
         width: 100%;
     }
+    #contents{
+      visibility: hidden;
+    }
+    #loader{
+      visibility: visible !important;
+    }
 </style>
 {% endblock %}
 
@@ -38,6 +44,21 @@ Questin Tagging
   integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
   crossorigin="anonymous"></script>
 <script>
+
+if($('CKEDITOR').length==0)
+{
+    document.getElementById("loader").style.display = "none"; 
+    document.getElementById("contents").style.visibility = "visible";
+}
+else
+{
+CKEDITOR.on( 'instanceReady', function() {
+    console.log('ready');
+    document.getElementById("loader").style.display = "none"; 
+    document.getElementById("contents").style.visibility = "visible";
+});
+}
+
     $(document).ready(()=>{
         var n= {{n}};
         subConcept=[[]];

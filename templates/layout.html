@@ -53,7 +53,8 @@
      <a href="/theory/crossview">Cross Concept Question Preview</a>
      <a href="/signout">Logout</a>
    </div> 
-  <div  height: 200%;">
+   <div id="loader" style="position: fixed; top:50%;left:50%;visibility: hidden;"><img src="{% static 'loader.gif' %}" height="50px" width="50px"></div>
+   <div id="contents" height="200%">
     {% block content %}
     {% endblock %}
     <br><br><br>

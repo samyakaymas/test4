@@ -23,5 +23,16 @@ class SignInForm(AuthenticationForm):
         fields = ('username', 'password')
 
 class PasswordForm(Form):
-    name=forms.TextInput()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['user'] = forms.ModelChoiceField(queryset=User.objects.all(),required=True)
+        self.fields['password1'] = forms.CharField(widget=forms.PasswordInput)
+        self.fields['password2'] = forms.CharField(widget=forms.PasswordInput)
+    def clean(self):
+        super(PasswordForm,self).clean()
+        form_data = self.cleaned_data
+        if form_data['password1'] != form_data['password2']:
+            self._errors["password2"] = self.error_class(["Password do not match"])
+            del form_data['password2']
+        return form_data
         

@@ -31,10 +31,23 @@ Cross Concept Questions
     .django-ckeditor-widget{
         width: 100%;
     }
+    #contents{
+      visibility: hidden;
+    }
+    #loader{
+      visibility: visible !important;
+    }
 </style>
 {% endblock %}
 {% block script %}
 <script>
+
+CKEDITOR.on( 'instanceReady', function() {
+  console.log('ready');
+    document.getElementById("loader").style.display = "none"; 
+    document.getElementById("contents").style.visibility = "visible";
+});
+
   $(document).ready(function()
   {
     console.log("hello1")

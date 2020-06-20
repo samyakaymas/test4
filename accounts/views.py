@@ -6,6 +6,8 @@ from django.shortcuts import render, redirect
 from .forms import SignUpForm, SignInForm, PasswordForm
 from django.contrib.auth import get_user_model
 from django.views.generic import ListView,CreateView, UpdateView,DetailView
+from django.contrib.auth import update_session_auth_hash
+from django.contrib import messages
 
 def signin(request):
     if request.user.is_authenticated and get_user_model().objects.get(pk=request.user.id).is_superuser:
@@ -28,8 +30,9 @@ def signin(request):
         form = SignInForm()
         return render(request, 'login.html', {'form': form})
 
+@login_required
 def signup(request):
-    if request.user.is_authenticated and get_user_model().objects.get(pk=request.user.id).is_superuser:
+    if request.user.is_superuser:
         if request.method == 'POST':
             form = SignUpForm(request.POST)
             if form.is_valid():
@@ -64,15 +67,24 @@ class UserListView(ListView):
             return render(request,"theoryTag/401.html")
         return super().get(request, *args, **kwargs)
 
-def ChangePassword(request,pk):
+@login_required
+def change_password(request,pk):
     if not request.user.is_superuser:
-        return render(request,"theoryTag/401.html")
-    if request.method=="GET":
+        return redirect('/')
+    if request.method == 'POST':
+        form = PasswordForm(request.POST)
+        if form.is_valid():
+            id = form.cleaned_data.get('user').id
+            user = get_user_model().objects.get(pk=id)
+            user.set_password(form.cleaned_data.get('password1'))
+            user.save()
+            message = "Password Changed Successfully"
+            form = PasswordForm()
+            return render(request, 'password_change.html', {'form':form ,'message':message})
+        else:
+            form = PasswordForm()
+            message = "Password Didnt Match"
+            return render(request, 'password_change.html', {'form':form ,'message':message})
+    else:
         form = PasswordForm()
-        return render(request,'password_change.html',{'form':form})
-    form =PasswordForm(request.POST)
-    if form.is_valid():
-        user=get_user_model().objects.get(pk=pk)
-        user.set_password(form.cleaned_data.get('passwordField'))
-        user.save()
-        return redirect('/list')
+        return render(request, 'password_change.html', {'form': form})

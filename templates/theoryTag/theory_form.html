@@ -65,6 +65,12 @@ form ul.inline li {
     float: left;
     padding-right: 7px;
 }
+#contents{
+      visibility: hidden;
+    }
+    #loader{
+      visibility: visible !important;
+    }
 </style>
 {% endblock %}
 {% block script %}
@@ -73,19 +79,12 @@ form ul.inline li {
   integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
   crossorigin="anonymous"></script>
 <script>
-    // function asyncAlert(m){
-    //     setTimeout(function(){
-    //         alert(m);
-    //     },1);
-    // };
+    CKEDITOR.on( 'instanceReady', function() {
+    document.getElementById("loader").style.display = "none"; 
+    document.getElementById("contents").style.visibility = "visible";
+});
     $(document).ready(function() {
         
-        
-        //asyncAlert(`Equations and reactions can be either directly copy pasted from Google Doc or can be created in the text box itself`)
-        alert(`The Tool Box is common for each text box.\n Equations and reactions can be either directly copy pasted from Google Doc or can be created in the text box itself`)
-        
-        console.log(1)
-        console.log("start")
         if($('[name="concept"]').val()===""){
             $('[name="concept"]').empty()
         $.ajax({
