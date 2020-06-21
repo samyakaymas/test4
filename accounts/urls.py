@@ -3,8 +3,10 @@ from . import views
 
 urlpatterns=[
     path('', views.signin, name="home"),
-    path('list/',views.UserListView.as_view(),name="user-list"),
-    path('userUpdate/<int:pk>',views.change_password,name="user-update"),
+    path('passchange',views.change_password,name="passchange"),
     path('signup/',views.signup,name="signup"),
-    path('signout/',views.signout,name="signout")
+    path('signout/',views.signout,name="signout"),
+    path('permissions/',views.change_permissions,name='permissions'),
+    path('userlist/',views.userlist,name='userlist'),
+    path('ajax/load/user',views.loaduser,name='loaduser'),
 ]

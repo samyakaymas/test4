@@ -1,0 +1,39 @@
+{% extends "layout1.html" %}
+{%block title%}
+Home
+{%endblock%}
+{% block content %}
+<form method="post" id="PasswordForm">
+    {% csrf_token %}
+    {{ form.media }}
+    <table>
+      {{ form.as_table }}
+    </table>
+    <button type="submit">Save</button>
+    {{ message }}
+  </form>
+{% endblock %}
+
+{% block script %}
+<script>
+    $("#id_username").change(function(){
+        var id = this.value;
+        $.ajax({
+                url: "{% url 'loaduser' %}", 
+                data: {
+                    'id' : id
+                },
+                success: (data)=> { 
+                    console.log($("#id_can_add_theory").value);
+                    $("#id_can_add_theory").prop('checked',data['add_theory']);
+                    $("#id_can_edit_theory").prop('checked',data['edit_theory']);
+                    $("#id_can_see_theory").prop('checked',data['see_theory']);
+                    $("#id_can_add_tag").prop('checked',data['add_tag']);
+                    $("#id_can_see_tag").prop('checked',data['see_tag']);
+                    $("#id_can_add_cross").prop('checked',data['add_cross']);
+                    $("#id_can_see_cross").prop('checked',data['see_cross']);
+                }
+            });
+    });
+</script>
+{% endblock %}
